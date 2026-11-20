@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhD Диссертация Мониторинги | Ботаника</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            botany: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Merriweather"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Mammoth.js for Word (.docx) reading in the browser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen">
+
+  <!-- ==================== LOGIN SCREEN OVERLAY ==================== -->
+  <div id="loginScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col animate-fadeIn">
+      
+      <!-- Academic Emblem & Header -->
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-botany-700 to-botany-500 mx-auto flex items-center justify-center text-white text-2xl shadow-lg shadow-botany-500/30 mb-3">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">PhD Диссертация Мониторинг</h2>
+        <div class="text-xs font-semibold text-botany-700 mt-0.5">03.00.05 — Ботаника</div>
+        <p class="text-xs text-slate-500 mt-1 font-serif italic">Саидмуродова Иноят</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div id="loginErrorAlert" class="hidden mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 animate-fadeIn">
+        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm"></i>
+        <span id="loginErrorMessage">Логин ёки пароль нотўғри!</span>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Логин</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="loginUsername" placeholder="Логинни киритинг" required class="w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-botany-500/20 focus:border-botany-600 focus:outline-none text-slate-800 text-xs font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Махфий пароль</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="password" id="loginPassword" placeholder="Паролни киритинг" required class="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-botany-500/20 focus:border-botany-600 focus:outline-none text-slate-800 text-xs font-medium">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <i id="passwordEyeIcon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <label class="flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" id="rememberMe" checked class="rounded accent-botany-600 cursor-pointer">
+            <span>Эслаб қолиш</span>
+          </label>
+          <span class="text-[11px] text-slate-400">Хавфсиз сессия</span>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-botany-700 hover:bg-botany-800 text-white rounded-xl font-bold shadow-md shadow-botany-700/20 flex items-center justify-center gap-2 transition text-xs mt-2">
+          <span>Тизимга кириш</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <div class="flex flex-col md:flex-row min-h-screen">
+
+    <!-- ==================== LEFT SIDEBAR NAVIGATION ==================== -->
+    <aside class="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 md:h-screen md:sticky md:top-0 z-30 shadow-sm">
+      
+      <!-- Logo & Academic Header -->
+      <div class="p-5 border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-botany-700 to-botany-500 flex items-center justify-center text-white shadow-md shadow-botany-500/20 shrink-0">
+            <i class="fa-solid fa-seedling text-lg"></i>
+          </div>
+          <div class="overflow-hidden">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base text-slate-900 tracking-tight">PhD Мониторинг</span>
+            </div>
+            <div class="text-[11px] font-bold text-botany-700 truncate">
+              03.00.05 — Ботаника
+            </div>
+          </div>
+        </div>
+
+        <!-- Researcher Profile Pill & Current User -->
+        <div class="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <div id="userAvatarIcon" class="w-7 h-7 rounded-lg bg-botany-100 text-botany-800 flex items-center justify-center text-xs font-bold shrink-0">
+              СИ
+            </div>
+            <div class="overflow-hidden">
+              <div class="flex items-center gap-1.5">
+                <span id="currentUserNameDisplay" class="text-xs font-bold text-slate-800 truncate">Саидмуродова Иноят</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span id="currentUserRoleBadge" class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Админ
+                </span>
+                <span class="text-[10px] text-slate-400 truncate">онлайн</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="openSettingsModal()" class="text-slate-400 hover:text-botany-700 p-1 rounded transition" title="Созламалар">
+              <i class="fa-solid fa-gear text-xs"></i>
+            </button>
+            <button onclick="logout()" class="text-slate-400 hover:text-rose-600 p-1 rounded transition" title="Тизимдан чиқиш">
+              <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Overall & Chapters Progress Widget in Sidebar -->
+        <div class="mt-3 p-3 rounded-xl bg-botany-50/80 border border-botany-100">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-bold text-botany-900">Умумий тайёрлик:</span>
+            <span id="headerProgressText" class="font-extrabold text-botany-700 text-sm">0%</span>
+          </div>
+          <div class="w-full bg-botany-200/60 h-2 rounded-full overflow-hidden mb-2.5">
+            <div id="headerProgressBar" class="bg-botany-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+
+          <!-- Chapters breakdown -->
+          <div class="pt-2 border-t border-botany-200/60">
+            <div class="flex items-center justify-between text-[11px] font-bold text-botany-900 mb-1.5">
+              <span>Боблар бўйича тайёрлик:</span>
+              <button onclick="switchTab('structure')" class="text-[10px] font-semibold text-botany-700 hover:underline flex items-center gap-0.5">
+                Кўриш <i class="fa-solid fa-chevron-right text-[8px]"></i>
+              </button>
+            </div>
+            <div id="sidebarChaptersList" class="space-y-1.5">
+              <!-- Dynamically populated by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Cloud Sync Widget -->
+        <div onclick="openCloudModal()" class="mt-2.5 px-3 py-2 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-botany-400 hover:bg-slate-50/80 cursor-pointer transition flex items-center justify-between">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span id="cloudSyncDot" class="w-2.5 h-2.5 rounded-full bg-slate-400 shrink-0"></span>
+            <div class="overflow-hidden">
+              <div id="cloudSyncTitle" class="text-xs font-bold text-slate-800 truncate">Булутли синхронизация</div>
+              <div id="cloudSyncSubtitle" class="text-[10px] text-slate-400 truncate">Созлаш учун босинг</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-cloud-arrow-up text-slate-400 text-xs shrink-0 ml-1"></i>
+        </div>
+      </div>
+
+      <!-- Left Vertical Menu Links -->
+      <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto">
+        <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          Асосий бўлимлар
+        </div>
+        
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab active">
+          <i class="fa-solid fa-chart-pie text-sm w-5 text-center"></i>
+          <span>Бошқарув панели</span>
+        </button>
+
+        <button onclick="switchTab('structure')" id="tab-structure" class="nav-tab">
+          <i class="fa-solid fa-book-bookmark text-sm w-5 text-center"></i>
+          <span>Боблар ва матн</span>
+        </button>
+
+        <button onclick="switchTab('articles')" id="tab-articles" class="nav-tab">
+          <i class="fa-solid fa-newspaper text-sm w-5 text-center"></i>
+          <span>Илмий нашрлар (ОАК)</span>
+        </button>
+
+        <button onclick="switchTab('literature')" id="tab-literature" class="nav-tab">
+          <i class="fa-solid fa-book-open text-sm w-5 text-center"></i>
+          <span>Адабиётлар базаси</span>
+        </button>
+
+        <button onclick="switchTab('roadmap')" id="tab-roadmap" class="nav-tab">
+          <i class="fa-solid fa-road-flag text-sm w-5 text-center"></i>
+          <span>Ҳимоя йўл харитаси</span>
+        </button>
+
+        <button onclick="switchTab('notes')" id="tab-notes" class="nav-tab">
+          <i class="fa-solid fa-comments text-sm w-5 text-center"></i>
+          <span>Раҳбар кўрсатмалари</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Bottom Actions -->
+      <div class="p-3 border-t border-slate-100 space-y-2 bg-slate-50/50">
+        <!-- Print / PDF Report Button -->
+        <button onclick="window.print()" class="w-full px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm flex items-center justify-center gap-2 transition" title="Илмий раҳбарга ҳисобот (PDF/Босма)">
+          <i class="fa-solid fa-print text-slate-500"></i>
+          <span>Ҳисобот чиқариш (PDF)</span>
+        </button>
+
+        <!-- Backup & Reset Dropdown -->
+        <div class="relative group">
+          <button class="w-full px-3 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm flex items-center justify-between transition">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-database text-slate-400"></i>
+              <span>Маълумотлар</span>
+            </span>
+            <i class="fa-solid fa-chevron-up text-[10px] text-slate-400"></i>
+          </button>
+          <div class="absolute bottom-full left-0 mb-1 w-full bg-white rounded-xl shadow-xl border border-slate-200 py-2 hidden group-hover:block z-50 animate-fadeIn">
+            <button onclick="exportData()" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+              <i class="fa-solid fa-download text-botany-600"></i> Захиралаш (JSON)
+            </button>
+            <label class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-upload text-blue-600"></i> Қайта тиклаш (Import)
+              <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+            </label>
+            <div class="border-t border-slate-100 my-1"></div>
+            <button onclick="resetToDefaultData()" class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2">
+              <i class="fa-solid fa-rotate-right"></i> Намунага қайтариш
+            </button>
+          </div>
+        </div>
+
+        <div class="text-[10px] text-slate-400 text-center pt-1">
+          <i class="fa-solid fa-shield-halved text-emerald-600"></i> Локал сақланади
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+      <!-- Top Context Banner (Dissertation Topic) -->
+      <div class="bg-gradient-to-r from-botany-900 via-botany-800 to-emerald-900 text-white py-5 px-4 sm:px-6 lg:px-8 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2 text-botany-300 text-xs font-semibold tracking-wide uppercase">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>Биология фанлари бўйича фалсафа доктори (PhD) илмий даражаси изланувчиси</span>
+            </div>
+            <h1 id="bannerTopic" class="text-lg sm:text-xl font-bold font-serif leading-snug tracking-tight text-white">
+              MEDIASIA MACROHYLLA (REGEL & SCHMALH.) PIMENOVNING JANUBI-G‘ARBIY HISOR TOG‘ TIZMALARI SHAROITIDAGI BIOEKOLOGIYASI
+            </h1>
+            <div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-botany-200 pt-1">
+              <span><i class="fa-regular fa-user mr-1 text-botany-300"></i> <strong>Изланувчи:</strong> <span id="bannerAuthor">Саидмуродова Иноят</span></span>
+              <span><i class="fa-solid fa-user-tie mr-1 text-botany-300"></i> <strong>Илмий раҳбар:</strong> <span id="bannerSupervisor">б.ф.д., профессор ...</span></span>
+              <span><i class="fa-regular fa-calendar-check mr-1 text-botany-300"></i> <strong>Мўлжалланган ҳимоя:</strong> <span id="bannerDefenseDate">2027 йил октябрь</span></span>
+            </div>
+          </div>
+
+          <!-- Countdown Card -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 flex items-center gap-4 shrink-0 self-start lg:self-auto min-w-[210px]">
+            <div class="w-12 h-12 rounded-xl bg-botany-600/70 flex items-center justify-center text-white text-xl shadow-inner">
+              <i class="fa-solid fa-hourglass-half animate-pulse"></i>
+            </div>
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-botany-200 font-medium">Ҳимоягача қолди:</div>
+              <div id="countdownDays" class="text-2xl font-extrabold text-white">--- кун</div>
+              <div id="countdownSub" class="text-[10px] text-botany-300">Режа бўйича ҳаракат</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Body Container -->
+      <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ==================== TAB 1: DASHBOARD ==================== -->
+        <div id="view-dashboard" class="tab-view space-y-6">
+          
+          <!-- Key Metric Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Card 1: Dissertation Pages -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Матн ҳажми</span>
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-file-lines"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span id="metricPagesActual" class="text-2xl font-bold text-slate-900">0</span>
+                <span class="text-xs text-slate-500">/ <span id="metricPagesTarget">140</span> бет</span>
+              </div>
+              <div class="mt-3">
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Ёзилган ҳажм</span>
+                  <span id="metricPagesPercent" class="font-semibold text-emerald-700">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="metricPagesBar" class="bg-emerald-500 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Articles & Publications -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Илмий нашрлар</span>
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-newspaper"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span id="metricArticlesPublished" class="text-2xl font-bold text-slate-900">0</span>
+                <span class="text-xs text-slate-500">/ <span id="metricArticlesTarget">7</span> та нашр этилган</span>
+              </div>
+              <div class="mt-3">
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>ОАК ва Scopus талаби</span>
+                  <span id="metricArticlesPercent" class="font-semibold text-blue-700">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="metricArticlesBar" class="bg-blue-500 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Literature Studied -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Адабиётлар базаси</span>
+                <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span id="metricLitRead" class="text-2xl font-bold text-slate-900">0</span>
+                <span class="text-xs text-slate-500">/ <span id="metricLitTarget">120</span> та таҳлил қилинган</span>
+              </div>
+              <div class="mt-3">
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Библиография</span>
+                  <span id="metricLitPercent" class="font-semibold text-purple-700">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="metricLitBar" class="bg-purple-500 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Roadmap Milestones -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ҳимоя босқичлари</span>
+                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-flag-checkered"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span id="metricMilestonesDone" class="text-2xl font-bold text-slate-900">0</span>
+                <span class="text-xs text-slate-500">/ <span id="metricMilestonesTotal">9</span> босқич</span>
+              </div>
+              <div class="mt-3">
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Йўл харитаси</span>
+                  <span id="metricMilestonesPercent" class="font-semibold text-amber-700">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="metricMilestonesBar" class="bg-amber-500 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Charts & Visual Analytics Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left: Overall Readiness Gauge / Doughnut -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <i class="fa-solid fa-circle-notch text-botany-600"></i>
+                  Диссертациянинг умумий тайёрлик даражаси
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">Боблар, мақолалар ва ҳимоя босқичлари интеграл ҳисоби</p>
+              </div>
+
+              <div class="relative py-6 flex items-center justify-center">
+                <div class="w-52 h-52">
+                  <canvas id="overallProgressChart"></canvas>
+                </div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span id="chartOverallNumber" class="text-4xl font-black text-slate-800">0%</span>
+                  <span class="text-xs font-semibold text-slate-400 mt-0.5">Умумий тайёр</span>
+                </div>
+              </div>
+
+              <div class="border-t border-slate-100 pt-3 text-xs text-slate-600 space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-botany-600 inline-block"></span> Диссертация матни ва боблар (50%):</span>
+                  <span id="weightTextChapters" class="font-semibold">0%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span> Илмий нашрлар (30%):</span>
+                  <span id="weightTextArticles" class="font-semibold">0%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> Ҳимоя босқичлари (20%):</span>
+                  <span id="weightTextRoadmap" class="font-semibold">0%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle & Right: Chapters Readiness Bar Chart -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-column text-botany-600"></i>
+                    Боблар ва бўлимлар бўйича тайёрлик
+                  </h3>
+                  <p class="text-xs text-slate-500 mt-1">Ҳар бир боб ва параграфларнинг бажарилиш фоизи</p>
+                </div>
+                <button onclick="switchTab('structure')" class="text-xs font-semibold text-botany-700 hover:text-botany-800 hover:underline flex items-center gap-1">
+                  Бобларни бошқариш <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+
+              <div class="h-64 my-4">
+                <canvas id="chaptersBarChart"></canvas>
+              </div>
+
+              <div class="bg-botany-50/70 border border-botany-100 rounded-xl p-3 flex items-start gap-3 text-xs text-botany-900">
+                <i class="fa-solid fa-circle-info text-botany-600 mt-0.5"></i>
+                <div>
+                  <strong>Ботаника бўйича тавсия:</strong> Дала тадқиқотлари (II боб) ва гербарийларни қайта ишлаш ҳамда турлар таҳлили (III боб) маълумотлари тўлиқ шакллангач, ОАК ва халқаро Scopus мақолаларига топширишни тезлаштириш тавсия этилади.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Action / Recent Updates & Next Tasks -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Next Critical Deadlines -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <i class="fa-regular fa-clock text-rose-500"></i>
+                  Яқинлашиб келаётган муддатлар (Дедлайнлар)
+                </h3>
+                <span class="text-xs text-slate-400">Навбатдаги режалар</span>
+              </div>
+              <div id="upcomingTasksList" class="space-y-3">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Botanical Research Notes & Status Summary -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <i class="fa-solid fa-microscope text-botany-600"></i>
+                  Ботаник тадқиқот ҳолати
+                </h3>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">Экспедиция ва анализ</span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-3 text-xs mb-4">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="text-slate-400 font-medium">Гербарий намуналари:</div>
+                  <div class="text-lg font-bold text-slate-800 mt-0.5" id="statHerbarium">120+ намуна</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="text-slate-400 font-medium">Тадқиқ этилаётган тур:</div>
+                  <div class="text-sm font-bold text-slate-800 mt-1 truncate" id="statSpecies">Mediasia macrohylla</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="text-slate-400 font-medium">Табиий популяциялар:</div>
+                  <div class="text-lg font-bold text-slate-800 mt-0.5" id="statPopulations">8 та ценопопуляция</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="text-slate-400 font-medium">Лаборатория таҳлили:</div>
+                  <div class="text-xs font-bold text-slate-800 mt-1" id="statLab">Уруғ ва кимёвий таҳлил</div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                <span class="text-xs text-slate-500">Илмий раҳбар билан охирги маслаҳат:</span>
+                <span id="lastMeetingDate" class="text-xs font-semibold text-slate-700">Яқинда</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TAB 2: CHAPTERS & STRUCTURE ==================== -->
+        <div id="view-structure" class="tab-view hidden space-y-6">
+          
+          <!-- Top Actions Bar -->
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Диссертация тузилиши, боблар ва параграфлар</h2>
+              <p class="text-xs text-slate-500">Ҳар бир бўлим ҳолати, саҳифалари ва дедлайнларини назорат қилинг</p>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button onclick="openAddSectionModal()" class="w-full sm:w-auto px-4 py-2 bg-botany-700 hover:bg-botany-800 text-white text-xs font-semibold rounded-xl shadow-sm flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-plus"></i> Янги параграф/бўлим қўшиш
+              </button>
+            </div>
+          </div>
+
+          <!-- Structure Accordion / List -->
+          <div id="chaptersContainer" class="space-y-4">
+            <!-- Rendered by app.js -->
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TAB 3: ARTICLES & PUBLICATIONS (OAK) ==================== -->
+        <div id="view-articles" class="tab-view hidden space-y-6">
+          
+          <!-- Top Info & Filter -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-bold text-slate-900">Илмий нашрлар ва мақолалар (ОАК талаблари)</h2>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                  PhD меъёри: камида 7 та илмий иш
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">ОАК рўйхатидаги миллий журналлар (3+), халқаро Scopus/WoS (1+), конференция тезислари (3+)</p>
+            </div>
+            <button onclick="openAddArticleModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm flex items-center gap-2 transition whitespace-nowrap">
+              <i class="fa-solid fa-plus"></i> Янги мақола қўшиш
+            </button>
+          </div>
+
+          <!-- Articles Status Summary Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
+              <div class="text-xs text-slate-500 font-medium">Режада / Ёзиляпти</div>
+              <div id="countArtDraft" class="text-xl font-bold text-slate-700 mt-1">0</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
+              <div class="text-xs text-amber-600 font-medium">Тақризда / Журналда</div>
+              <div id="countArtReview" class="text-xl font-bold text-amber-600 mt-1">0</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
+              <div class="text-xs text-emerald-600 font-medium">Нашр этилган</div>
+              <div id="countArtPublished" class="text-xl font-bold text-emerald-600 mt-1">0</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center">
+              <div class="text-xs text-purple-600 font-medium">Scopus / Web of Sci.</div>
+              <div id="countArtScopus" class="text-xl font-bold text-purple-600 mt-1">0</div>
+            </div>
+          </div>
+
+          <!-- Articles Table / Cards -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-800">Мақолалар рўйхати</h3>
+              <div class="flex items-center gap-2">
+                <select id="articleFilterCategory" onchange="renderArticles()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-1 focus:ring-botany-500">
+                  <option value="all">Барча тоифалар</option>
+                  <option value="oak">ОАК журналлари</option>
+                  <option value="scopus">Scopus / Web of Science</option>
+                  <option value="conf_intl">Халқаро конференция</option>
+                  <option value="conf_nat">Республика конференцияси</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80">
+                    <th class="py-3 px-4">Мақола мавзуси</th>
+                    <th class="py-3 px-3">Журнал / Тўплам</th>
+                    <th class="py-3 px-3">Тоифа</th>
+                    <th class="py-3 px-3">Ҳаммуаллифлар</th>
+                    <th class="py-3 px-3">Ҳолат (Статус)</th>
+                    <th class="py-3 px-3">Муддат / Сана</th>
+                    <th class="py-3 px-3 text-right">Амаллар</th>
+                  </tr>
+                </thead>
+                <tbody id="articlesTableBody" class="divide-y divide-slate-100">
+                  <!-- Rendered by app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TAB 4: LITERATURE TRACKER ==================== -->
+        <div id="view-literature" class="tab-view hidden space-y-6">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Илмий адабиётлар ва манбалар картотекаси</h2>
+              <p class="text-xs text-slate-500 mt-1">Диссертация ва мақолалар учун ўрганилган монографиялар, мақолалар ва флористик манбалар</p>
+            </div>
+            <button onclick="openAddLiteratureModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-xl shadow-sm flex items-center gap-2 transition">
+              <i class="fa-solid fa-plus"></i> Манба қўшиш
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Search & Filter -->
+            <div class="md:col-span-4 bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3">
+              <div class="flex-1 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="literatureSearchInput" oninput="renderLiterature()" placeholder="Адабиёт муаллифи ёки сарлавҳаси бўйича излаш..." class="w-full pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-botany-500">
+              </div>
+              <select id="literatureStatusFilter" onchange="renderLiterature()" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-slate-700 focus:outline-none">
+                <option value="all">Барча ҳолатлар</option>
+                <option value="read">Ўқилган ва конспект қилинган</option>
+                <option value="cited">Диссертацияга иқтибос олинган</option>
+                <option value="planned">Режада (топиш/ўқиш керак)</option>
+              </select>
+            </div>
+
+            <!-- Literature Items List -->
+            <div class="md:col-span-4 space-y-3" id="literatureListContainer">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TAB 5: ROADMAP / ATTESTATION MILESTONES ==================== -->
+        <div id="view-roadmap" class="tab-view hidden space-y-6">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">PhD Ҳимояси йўл харитаси (ОАК расмий босқичлари)</h2>
+              <p class="text-xs text-slate-500 mt-1">Мавзу тасдиғидан бошлаб расмий ҳимоя ва диплом олишгача бўлган 9 асосий босқич</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-600">Босқичлар бажарилиши:</span>
+              <span id="roadmapStatusText" class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md border border-amber-200">0 / 9</span>
+            </div>
+          </div>
+
+          <!-- Vertical Timeline -->
+          <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div id="roadmapTimelineContainer" class="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TAB 6: SUPERVISOR NOTES & FEEDBACK ==================== -->
+        <div id="view-notes" class="tab-view hidden space-y-6">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Илмий раҳбар кўрсатмалари ва топшириқлар кундалиги</h2>
+              <p class="text-xs text-slate-500 mt-1">Маслаҳат учрашувларида берилган эътирозлар, тавсиялар ва бажарилган тузатишлар</p>
+            </div>
+            <button onclick="openAddNoteModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-sm flex items-center gap-2 transition">
+              <i class="fa-solid fa-plus"></i> Янги кўрсатма/қайд
+            </button>
+          </div>
+
+          <div id="notesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Rendered by app.js -->
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div>PhD Диссертация мониторинг тизими — <strong>03.00.05 Ботаника</strong></div>
+          <div class="flex items-center gap-3 text-slate-400">
+            <span>Барча маълумотлар браузерингизда хавфсиз сақланади</span>
+            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+            <button onclick="exportData()" class="hover:text-botany-700 underline">Захира олиш</button>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <!-- Modal 6: Cloud Database & Real-Time Sync Settings -->
+  <div id="cloudSyncModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto animate-fadeIn text-xs">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <i class="fa-solid fa-cloud text-sm"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">Булутли синхронизация (Cloud Sync)</h3>
+            <p class="text-[11px] text-slate-500">Комп ўчиқ вақтда телефондан ўзгартириш ва маълумотларни бирлаштириш</p>
+          </div>
+        </div>
+        <button onclick="closeModal('cloudSyncModal')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none px-2">&times;</button>
+      </div>
+
+      <!-- Current Sync Status Box -->
+      <div id="cloudModalStatusBox" class="my-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span id="cloudModalStatusDot" class="w-3 h-3 rounded-full bg-slate-400"></span>
+          <div>
+            <div id="cloudModalStatusTitle" class="font-bold text-slate-800">Ҳозирча локал режимда</div>
+            <div id="cloudModalStatusDesc" class="text-[11px] text-slate-500">Маълумотлар фақат ушбу компьютер хотирасида сақланмоқда</div>
+          </div>
+        </div>
+        <button type="button" onclick="syncNowWithCloud()" id="btnSyncNow" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg font-semibold shadow-2xs flex items-center gap-1.5 transition text-xs">
+          <i class="fa-solid fa-rotate text-blue-600"></i> Ҳозир синхронлаш
+        </button>
+      </div>
+
+      <!-- Configuration Form -->
+      <form id="cloudSyncForm" onsubmit="saveCloudConfig(event)" class="space-y-3.5">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">
+            Google Firebase Database URL (Булутли база манзили)
+          </label>
+          <input type="url" id="cloudDbUrl" value="https://saidmurodova-inoyat-phd-default-rtdb.asia-southeast1.firebasedatabase.app" placeholder="https://сизнинг-лойиҳа-номингиз-default-rtdb.firebaseio.com" class="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-botany-500 focus:outline-none font-mono text-slate-800" required>
+          <p class="text-[10px] text-slate-400 mt-1">Google Firebase Realtime Database бепул ҳаволаси</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">
+              Шахсий махфий калит / PIN-код
+            </label>
+            <input type="text" id="cloudSyncKey" placeholder="мас: inoyat2026" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+            <p class="text-[10px] text-slate-400 mt-0.5">Телефонда ҳам айнан шу калит киритилади</p>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">
+              Авто-синхронизация
+            </label>
+            <select id="cloudAutoSync" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="true">Ҳар доим фаол (Тавсия этилади)</option>
+              <option value="false">Фақат қўлда босилганда</option>
+            </select>
+            <p class="text-[10px] text-slate-400 mt-0.5">Ҳар сафар очилганда янгилайди</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="disconnectCloud()" class="px-3 py-2 text-rose-600 hover:bg-rose-50 rounded-xl font-medium transition mr-auto">
+            Уланишни бекор қилиш
+          </button>
+          <button type="button" onclick="closeModal('cloudSyncModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition">
+            Бекор қилиш
+          </button>
+          <button type="submit" class="px-5 py-2 bg-botany-700 hover:bg-botany-800 text-white rounded-xl font-semibold shadow-sm flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-link"></i> Улаш ва Текшириш
+          </button>
+        </div>
+      </form>
+
+      <!-- Step-by-step Guide Accordion -->
+      <div class="mt-5 pt-4 border-t border-slate-200/80">
+        <h4 class="font-bold text-slate-800 flex items-center gap-1.5 mb-2">
+          <i class="fa-solid fa-circle-question text-blue-600"></i>
+          Google Firebase'да 2 дақиқада бепул база очиш қўлланмаси:
+        </h4>
+        <ol class="space-y-1.5 text-slate-600 pl-4 list-decimal text-[11px] leading-relaxed">
+          <li><strong>console.firebase.google.com</strong> сайтига ўз Gmail почтангиз билан киринг.</li>
+          <li><strong>«Add project» (Лойиҳа яратиш)</strong> тугмасини босиб, ном ёзинг (масалан: <code>phd-inoyat</code>) ва давом этинг.</li>
+          <li>Чап менюдан <strong>«Build» → «Realtime Database»</strong> бўлимини танлаб, <strong>«Create Database»</strong> тугмасини босинг.</li>
+          <li>Хавфсизлик қоидалари (Rules) танловида <strong>«Start in test mode»</strong> (синов режими)ни танланг ва «Enable» қилинг.</li>
+          <li>Юқорида ҳосил бўлган ҳаволани (масалан: <code>https://phd-inoyat-default-rtdb.firebaseio.com/</code>) нусхалаб, юқоридаги катакка қўйинг ва <strong>«Улаш ва Текшириш»</strong>ни босинг!</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal 0: Dedicated Dissertation Text Editor & Word Uploader -->
+  <div id="textEditorModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl border border-slate-100 max-h-[95vh] flex flex-col animate-fadeIn">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-3 border-b border-slate-100 gap-3">
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <span id="editorSectionCode" class="px-2 py-0.5 rounded text-xs font-black bg-botany-100 text-botany-800 border border-botany-200">
+              §1.1
+            </span>
+            <h3 id="editorSectionTitle" class="text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-1">
+              Бўлим матни муҳаррири
+            </h3>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">
+            Диссертация матнини ёзиш, таҳрирлаш ёки тайёр Microsoft Word (.docx) файлидан тўғридан-тўғри юклаш
+          </p>
+        </div>
+        <button onclick="closeModal('textEditorModal')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none px-2">&times;</button>
+      </div>
+
+      <!-- Live Academic Counters & Action Bar -->
+      <div class="py-2.5 px-3 my-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex flex-wrap items-center gap-3 text-slate-600">
+          <span class="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-file-lines text-botany-600"></i>
+            <span>Ҳажми (ОАК стандарти):</span>
+            <strong id="editorPageCount" class="text-botany-800 font-bold">0.0 бет</strong>
+          </span>
+          <span class="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-align-left text-blue-600"></i>
+            <span>Сўзлар сони:</span>
+            <strong id="editorWordCount" class="text-slate-800 font-bold">0</strong>
+          </span>
+          <span class="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs hidden sm:flex">
+            <i class="fa-solid fa-font text-purple-600"></i>
+            <span>Белгилар:</span>
+            <strong id="editorCharCount" class="text-slate-800 font-bold">0</strong>
+          </span>
+        </div>
+
+        <!-- Word Upload Button -->
+        <div class="flex items-center gap-2">
+          <label class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition text-xs">
+            <i class="fa-solid fa-file-word"></i>
+            <span>Ворд (.docx) юклаш</span>
+            <input type="file" id="wordFileInput" accept=".docx,.txt" class="hidden" onchange="handleWordUpload(event)">
+          </label>
+
+          <button onclick="exportCurrentSectionToDoc()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg font-medium shadow-2xs flex items-center gap-1.5 transition text-xs" title="Ворд файли қилиб кўчириб олиш">
+            <i class="fa-solid fa-download text-slate-500"></i>
+            <span class="hidden sm:inline">Вордда олиш</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formatting Toolbar -->
+      <div class="flex flex-wrap items-center gap-1 pb-2 border-b border-slate-100 text-xs">
+        <button type="button" onclick="formatEditor('bold')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-slate-700 font-bold" title="Қалин (Bold)"><i class="fa-solid fa-bold"></i></button>
+        <button type="button" onclick="formatEditor('italic')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-slate-700 italic" title="Қия (Italic)"><i class="fa-solid fa-italic"></i></button>
+        <button type="button" onclick="formatEditor('underline')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-slate-700 underline" title="Тагига чизилган"><i class="fa-solid fa-underline"></i></button>
+        <span class="w-px h-5 bg-slate-200 mx-1"></span>
+        <button type="button" onclick="formatEditor('formatBlock', '<h2>')" class="p-1.5 px-2 rounded hover:bg-slate-100 text-slate-700 font-semibold" title="Сарлавҳа">H2</button>
+        <button type="button" onclick="formatEditor('formatBlock', '<h3>')" class="p-1.5 px-2 rounded hover:bg-slate-100 text-slate-700 font-semibold" title="Кичик сарлавҳа">H3</button>
+        <button type="button" onclick="formatEditor('formatBlock', '<p>')" class="p-1.5 px-2 rounded hover:bg-slate-100 text-slate-700" title="Оддий абзац">Параграф</button>
+        <span class="w-px h-5 bg-slate-200 mx-1"></span>
+        <button type="button" onclick="formatEditor('insertUnorderedList')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-slate-700" title="Белгили рўйхат"><i class="fa-solid fa-list-ul"></i></button>
+        <button type="button" onclick="formatEditor('insertOrderedList')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-slate-700" title="Рақамли рўйхат"><i class="fa-solid fa-list-ol"></i></button>
+        <span class="w-px h-5 bg-slate-200 mx-1"></span>
+        <button type="button" onclick="formatEditor('removeFormat')" class="p-1.5 w-8 h-8 rounded hover:bg-slate-100 text-rose-600" title="Форматни тозалаш"><i class="fa-solid fa-eraser"></i></button>
+        
+        <div class="ml-auto text-[11px] text-slate-400 flex items-center gap-1.5">
+          <span id="editorAutoSaveStatus" class="text-slate-400">Авто-сақлаш фаол</span>
+        </div>
+      </div>
+
+      <!-- Main Rich Text / Content Area -->
+      <div class="flex-1 overflow-y-auto my-2 border border-slate-200 rounded-xl bg-slate-50/30 p-1">
+        <div id="editorContentArea" 
+             contenteditable="true" 
+             oninput="handleEditorInput()"
+             class="min-h-[300px] sm:min-h-[380px] p-4 sm:p-6 bg-white rounded-lg focus:outline-none font-serif text-[15px] sm:text-[16px] leading-[1.8] text-slate-900 shadow-inner"
+             style="font-family: 'Times New Roman', Times, serif;">
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
+        <div class="flex items-center gap-2 text-botany-800 font-semibold bg-botany-50 px-3 py-1.5 rounded-lg border border-botany-200">
+          <i class="fa-solid fa-calculator text-botany-600"></i>
+          <span>ОАК А4 стандарти (1800 белги = 1 бет) бўйича ҳажм ва фоиз автоматик ҳисобланмоқда</span>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('textEditorModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition">
+            Ёпиш
+          </button>
+          <button type="button" onclick="saveEditorContent(true)" class="px-5 py-2 bg-botany-700 hover:bg-botany-800 text-white rounded-xl font-semibold shadow-sm flex items-center gap-2 transition">
+            <i class="fa-solid fa-floppy-disk"></i> Сақлаш ва Ҳисоблаш
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal 1: Settings / Topic / Author -->
+  <div id="settingsModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-gear text-botany-600"></i> Диссертация созламалари
+        </h3>
+        <button onclick="closeModal('settingsModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-4 mt-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Диссертация мавзуси</label>
+          <textarea id="settingTopic" rows="3" class="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-botany-500 focus:outline-none text-slate-800" required></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Изланувчи (Ф.И.Ш.)</label>
+            <input type="text" id="settingAuthor" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Ихтисослик шифри ва номи</label>
+            <input type="text" id="settingSpecialty" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Илмий раҳбар (Ф.И.Ш., унвони)</label>
+            <input type="text" id="settingSupervisor" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Мўлжалланган ҳимоя санаси</label>
+            <input type="date" id="settingDefenseDate" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Диссертация режа ҳажми (бет)</label>
+            <input type="number" id="settingTargetPages" min="80" max="250" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Талаб қилинган мақолалар сони</label>
+            <input type="number" id="settingTargetArticles" min="4" max="25" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+        </div>
+
+        <!-- Security & Passwords Section -->
+        <div class="pt-3 border-t border-slate-200">
+          <div class="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-halved text-botany-600"></i> Кириш логин ва паролларини созлаш
+          </div>
+          <div class="space-y-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-0.5 text-[11px]">Админ логини</label>
+                <input type="text" id="settingAdminUser" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-0.5 text-[11px]">Админ пароли</label>
+                <input type="text" id="settingAdminPass" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white text-xs">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-200/60">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-0.5 text-[11px]">Илмий раҳбар логини</label>
+                <input type="text" id="settingViewerUser" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-0.5 text-[11px]">Илмий раҳбар пароли</label>
+                <input type="text" id="settingViewerPass" class="w-full border border-slate-200 rounded-lg p-1.5 bg-white text-xs">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('settingsModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium">Бекор қилиш</button>
+          <button type="submit" class="px-4 py-2 bg-botany-700 hover:bg-botany-800 text-white rounded-lg font-semibold">Сақлаш</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add/Edit Chapter/Section -->
+  <div id="sectionModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="sectionModalTitle" class="text-base font-bold text-slate-900">Бўлим/параграфни таҳрирлаш</h3>
+        <button onclick="closeModal('sectionModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <form id="sectionForm" onsubmit="saveSection(event)" class="space-y-3 mt-4 text-xs">
+        <input type="hidden" id="sectionId">
+        <input type="hidden" id="sectionChapterIndex">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Параграф/бўлим номи</label>
+          <input type="text" id="sectionTitle" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Ҳолати (Статус)</label>
+            <select id="sectionStatus" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="not_started">Режалаштирилган</option>
+              <option value="in_progress">Ёзилмоқда</option>
+              <option value="under_review">Раҳбар кўригида</option>
+              <option value="revision">Тузатилмоқда</option>
+              <option value="completed">Тайёр</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Мўлжалланган муддат</label>
+            <input type="date" id="sectionDeadline" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <div>
+            <label class="block font-semibold text-slate-500 mb-1">Амалдаги саҳифа (А4)</label>
+            <div class="flex items-center gap-1">
+              <input type="text" id="sectionPages" readonly class="w-full border border-slate-200 bg-slate-100/80 rounded-lg p-2 text-slate-700 font-bold cursor-not-allowed select-none">
+              <span class="text-xs text-slate-400 font-medium">бет</span>
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-500 mb-1">Тайёрлик фоизи</label>
+            <div class="flex items-center gap-1">
+              <input type="text" id="sectionProgress" readonly class="w-full border border-slate-200 bg-slate-100/80 rounded-lg p-2 text-botany-700 font-bold cursor-not-allowed select-none">
+              <span class="text-xs text-slate-400 font-medium">%</span>
+            </div>
+          </div>
+          <div class="col-span-2 text-[10px] text-botany-700 flex items-center gap-1 pt-1 border-t border-slate-200/60">
+            <i class="fa-solid fa-lock text-[9px]"></i>
+            <span>Бу кўрсаткичлар юкланган Ворд ёки киритилган матн ҳажмидан (1800 белги = 1 бет) автоматик ҳисобланади.</span>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Изоҳ / Эслатма</label>
+          <textarea id="sectionNotes" rows="2" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" placeholder="Ушбу бўлим бўйича муҳим эслатмалар..."></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('sectionModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium">Бекор қилиш</button>
+          <button type="submit" class="px-4 py-2 bg-botany-700 hover:bg-botany-800 text-white rounded-lg font-semibold">Сақлаш</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Add/Edit Article -->
+  <div id="articleModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="articleModalTitle" class="text-base font-bold text-slate-900">Илмий мақола маълумотлари</h3>
+        <button onclick="closeModal('articleModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <form id="articleForm" onsubmit="saveArticle(event)" class="space-y-3 mt-4 text-xs">
+        <input type="hidden" id="articleId">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Мақола номи (Мавзуси)</label>
+          <input type="text" id="articleTitle" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Журнал / Тўплам номи</label>
+            <input type="text" id="articleJournal" placeholder="Мас: Ўзбекистон биология журнали" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Тоифа</label>
+            <select id="articleCategory" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="oak">ОАК миллий журнали</option>
+              <option value="scopus">Scopus / Web of Science</option>
+              <option value="conf_intl">Халқаро конференция</option>
+              <option value="conf_nat">Республика конференцияси</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Ҳолати (Статус)</label>
+            <select id="articleStatus" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="draft">Қоралама / Ёзиляпти</option>
+              <option value="submitted">Журналга топширилган</option>
+              <option value="review">Тақризда / Таҳрирда</option>
+              <option value="accepted">Қабул қилинди</option>
+              <option value="published">Нашр этилди</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Сана / Йил</label>
+            <input type="date" id="articleDate" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Ҳаммуаллифлар</label>
+          <input type="text" id="articleAuthors" placeholder="Мас: Саидмуродова И., Илмий раҳбар" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Ҳавола (DOI, веб-сайт ёки PDF йўли)</label>
+          <input type="text" id="articleLink" placeholder="https://doi.org/... ёки файл йўли" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none">
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('articleModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium">Бекор қилиш</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">Сақлаш</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Add Literature -->
+  <div id="literatureModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="literatureModalTitle" class="text-base font-bold text-slate-900">Адабиёт манбаси қўшиш</h3>
+        <button onclick="closeModal('literatureModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <form id="literatureForm" onsubmit="saveLiterature(event)" class="space-y-3 mt-4 text-xs">
+        <input type="hidden" id="litId">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Манба номи (Китоб / Мақола)</label>
+          <input type="text" id="litTitle" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Муаллиф(лар)</label>
+            <input type="text" id="litAuthor" placeholder="Мас: Тожибоев К.Ш." class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Нашр йили</label>
+            <input type="number" id="litYear" min="1900" max="2030" placeholder="2022" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Манба тури</label>
+            <select id="litType" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="book">Монография / Китоб</option>
+              <option value="article">Илмий мақола</option>
+              <option value="flora">Флора маълумотномаси</option>
+              <option value="dissertation">Диссертация / Автореферат</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Ҳолати</label>
+            <select id="litStatus" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+              <option value="read">Ўқилган ва таҳлил қилинган</option>
+              <option value="cited">Диссертацияга иқтибос олинган</option>
+              <option value="planned">Режада (топиш керак)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Қисқача конспект ёки иқтибос қайди</label>
+          <textarea id="litNotes" rows="3" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" placeholder="Ушбу манбанинг қайси боб учун фойдалилиги, муҳим фикрлар..."></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('literatureModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium">Бекор қилиш</button>
+          <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold">Сақлаш</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Add Supervisor Note -->
+  <div id="noteModal" class="modal-backdrop hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900">Илмий раҳбар кўрсатмаси қўшиш</h3>
+        <button onclick="closeModal('noteModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <form id="noteForm" onsubmit="saveNote(event)" class="space-y-3 mt-4 text-xs">
+        <input type="hidden" id="noteId">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Учрашув/кўрсатма санаси</label>
+          <input type="date" id="noteDate" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Тегишли бўлим / мавзу</label>
+          <input type="text" id="noteSubject" placeholder="Мас: II боб дала материаллари таҳлили бўйича" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Раҳбарнинг эътирозлари ва топшириқлари</label>
+          <textarea id="noteText" rows="4" class="w-full border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-botany-500 focus:outline-none" placeholder="Қайси камчиликларни тўғрилаш керак..." required></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Бажариш ҳолати</label>
+          <select id="noteStatus" class="w-full border border-slate-200 rounded-lg p-2 bg-white focus:outline-none">
+            <option value="pending">Кутилмоқда (бажарилмаган)</option>
+            <option value="in_progress">Ишланмоқда</option>
+            <option value="done">Бажарилди ва топширилди</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('noteModal')" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium">Бекор қилиш</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-semibold">Сақлаш</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
